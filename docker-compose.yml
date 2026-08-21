@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # psql db 
+  postgres-db:
+    # official for light psql image
+    image: postgres:16-alpine
+    container_name: hackathon_postgres 
+    restart: always
+    environment: 
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      DATABASE_URL: ${DATABASE_URL}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      # permanently store data to restart safely
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # fastapi and uvicorn
+  backend-api: 
+    build:
+      # everything needed for the backend-api image is in backend folder
+      context: ./backend
+      # dockerfile location relative to the context folder
+      dockerfile: Dockerfile
+    container_name: hackathon_backend
+    restart: always
+    ports:
+      - "${BACKEND_PORT}:8080"
+    environment: 
+      # postgres-db matches service name above 
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-db:5432/${POSTGRES_DB}
+    volumes: 
+      # mount local code in container so that --reload is instant
+      - ./backend:/backend
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+volumes: 
+  postgres_data: 
