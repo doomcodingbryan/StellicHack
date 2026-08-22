@@ -91,6 +91,8 @@ Stored in: app/seed/seed_data.py
 ---
 
 # Backend File Structure
+
+```text
 backend
 ├── app
 │   ├── core
@@ -136,4 +138,5 @@ backend
 ├── Dockerfile
 ├── README.md
 └── requirements.txt
+```
 
