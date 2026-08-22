@@ -14,9 +14,7 @@ from app.utils.enums import(
     CourseDifficulty, 
     CourseGrade, 
     CourseStatus,
-    Career_Industries,
-    Careers,
-    Skills, 
+    StepType,
     Importance,
     Proficiency
 )
@@ -47,6 +45,28 @@ class Token(BaseModel):
 # how to make the student schema? Because once the user selects their
 # role from creation, it should either: Ask them to fill out the other 
 # fields needed for that role, or have them go through regularly as a normal user (not student or alumn)
+class StudentCreate(BaseModel): 
+    institution_id: int
+    degree_id: int
+    grad_year: int
+    grad_term: StudentTerm
+    major: StudentMajor 
+    year: StudentYear
+    bio: str | None = None
+
+class StudentResponse(BaseModel): 
+    model_config = ConfigDict(from_attributes = True) 
+
+    id: int
+    user_id: int 
+    institution_id: int 
+    degree_id: int
+    grad_year: int 
+    grad_term: StudentTerm
+    major: StudentMajor
+    year: StudentYear
+    bio: str | None
+
 
 
 class InstitutionCreate(BaseModel): 
@@ -110,36 +130,36 @@ class CourseResponse(BaseModel):
 
 
 class CareerCreate(BaseModel): 
-    title: Careers
-    industy: Career_Industries
+    title: str
+    industry: str
     description: str
-    # forgot about optional information, how do I write it for that on the schemas? Will it allow them to not put anything since it is nullable
-    # even though I put it here on the schema? 
-    salary_range: str
-    outlook: str
+    salary_range: str | None = None
+    outlook: str | None = None
 
 class CareerResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
-    title: Careers
-    industry: Career_Industries
+    title: str
+    industry: str
     description: str
+    salary_range: str | None
+    outlook: str | None
 
 
 
 class SkillCreate(BaseModel):
-    name: Skills
-    category: Career_Industries
-    description: str
+    name: str
+    category: str
+    description: str | None = None
 
 class SkillResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
-    name: Skills
-    category: Career_Industries
-    description: str
+    name: str
+    category: str
+    description: str | None
 
 
 
@@ -147,16 +167,99 @@ class ProjectCreate(BaseModel):
     name: str
     description: str
     visibility: ProfileVisibility
-    github_url: str 
+    github_url: str | None = None
 
 class ProjectResponse(BaseModel): 
+    model_config = ConfigDict(from_attributes = True) 
+
+    id: int
     name: str
     description: str
-    visibilty: ProfileVisibility
-    github_url: str
+    visibility: ProfileVisibility
+    github_url: str | None
 
+
+class StudentCourseCreate(BaseModel): 
+    course_id: int
+    semester: StudentTerm
+    year: int
+    grade: CourseGrade | None = None
+    status: CourseStatus
+
+class StudentCourseResponse(BaseModel): 
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    course_id: int 
+    semester: StudentTerm 
+    year: int
+    grade: CourseGrade | None
+    status: CourseStatus
+
+
+class StudentSkillCreate(BaseModel): 
+    skill_id: int
+    proficiency: Proficiency
+
+class StudentSkillResponse(BaseModel): 
+    model_config = ConfigDict(from_attributes=True)
+
+    skill_id: int
+    proficiency: Proficiency
+
+
+class AlumniSkillCreate(BaseModel): 
+    skill_id: int
+    proficiency: Proficiency
+
+class AlumniSkillResponse(BaseModel): 
+    model_config = ConfigDict(from_attributes=True)
+
+    skill_id: int
+    proficiency: Proficiency
+
+
+class PathwayStepCreate(BaseModel):
+    step_number: int
+    title: str
+    description: str 
+    step_type: StepType
+    course_id: int | None = None
+    project_id: int | None = None
+    internship_id: int | None = None
+    resource_url: str | None = None
+
+class PathwayStepResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    step_number: int
+    title: str
+    description: str
+    step_type: StepType
+    course_id: int | None
+    project_id: int | None
+    internship_id: int | None
+    resource_url: str | None
+
+
+class PathwayCreate(BaseModel):
+    career_id: int
+    title: str
+    description: str | None = None
+    is_public: bool = True
+
+class PathwayResponse(BaseModel): 
+    model_config = ConfigDict(from_attributes = True) 
+
+    id: int
+    career_id: int
+    title: str
+    description: str | None
+    is_public: bool
 
 """
+
 Other than the questions above, how do I go about making the schemas 
 for the student_course, career_skill, student_skill (and alumni) classes in models? 
 Do I need to make them? 

@@ -13,7 +13,7 @@ WORKDIR /backend
 
 # need to install system libraries for psycopg2, and delete setup cache to stay lightweight
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \ 
+    build-essential \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 

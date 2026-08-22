@@ -1,13 +1,18 @@
 # .dockerignore
 # don't copy local python venv
-.venv
+.venv/
+venv/
 # ignore python bytecode
 __pycache__
+*.py[cod]
 *.pyc
 *.pyo
 *.pyd
 # exclude local test cache
-.pytest_cache
+.pytest_cache/
 # keep out git and env
-.git
+.git/
+.gitignore
 .env
+.env.*
+*.log

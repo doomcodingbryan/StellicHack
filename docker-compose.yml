@@ -1,4 +1,3 @@
-version: '3.8'
 
 services:
   # psql db 
@@ -37,9 +36,10 @@ services:
     environment: 
       # postgres-db matches service name above 
       DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres-db:5432/${POSTGRES_DB}
+      JWT_SECRET: ${JWT_SECRET}
     volumes: 
       # mount local code in container so that --reload is instant
-      - ./backend:/backend
+      - ./backend:/backend:Z
     depends_on:
       postgres-db:
         condition: service_healthy

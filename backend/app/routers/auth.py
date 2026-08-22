@@ -32,6 +32,12 @@ def register_user(user: UserCreate, db: Session = Depends(get_db)):
     if existing_user: 
         raise HTTPException(status_code = 400, detail = "Email already registered")
 
+    if user.role == UserRole.ADMIN:
+        raise HTTPException(
+            status_code = 403, 
+            detail = "Admin accounts cannot be self registered" 
+        )
+    
     user_data = user.model_dump()
     raw_password = user_data.pop("password") 
     hashed_password = hash_password(raw_password)

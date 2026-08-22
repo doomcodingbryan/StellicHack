@@ -18,7 +18,6 @@ SECRET_KEY = settings.JWT_SECRET
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
-# password hasing function handled through passlib
 def hash_password (password: str) -> str:
     # convert plaintext string into raw bytes
     password_bytes = password.encode('utf-8')
@@ -37,7 +36,6 @@ def verify_password (plain_password: str, hashed_password: str) -> bool:
     plain_bytes = plain_password.encode('utf-8')
     hashed_bytes = hashed_password.encode('utf-8')
     return bcrypt.checkpw(plain_bytes, hashed_bytes) 
-
 
 
 def create_access_token (data: dict) -> str: 
